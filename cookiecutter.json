@@ -1,0 +1,9 @@
+{
+	"full_name": "Sebastian Ruml",
+	"email": "sebastian@sebastianruml.name",
+	"github_username": "hypebeast",
+  "repo_name": "myflaskapp",
+	"project_name": "My Flask App",
+	"app_name": "myflaskapp",
+	"project_short_description": "A minimal flasky app."
+}
