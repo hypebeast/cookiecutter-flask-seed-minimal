@@ -28,8 +28,8 @@ def clean():
         print('App directory does not exist. Skipping.')
 
 
-def _run_manage_command(command):
-    run('python {0} {1}'.format(os.path.join(COOKIE, 'manage.py'), command), echo=True)
+def _run_manage_command(command, args=""):
+    run('python {0} {1} {2}'.format(os.path.join(COOKIE, 'manage.py'), command, args), echo=True)
 
 
 @task(pre=[clean, build])
@@ -38,5 +38,5 @@ def test():
     run('pip install -r {0} --ignore-installed'.format(REQUIREMENTS), echo=True)
     os.chdir(COOKIE)
     run('bower install', echo=True)
-    _run_manage_command('lint')
+    _run_manage_command('lint', '-f')
     _run_manage_command('test')
