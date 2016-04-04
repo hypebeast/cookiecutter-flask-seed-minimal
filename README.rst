@@ -15,7 +15,7 @@ Quick Start
 Generate a new project:
 
   $ pip install cookiecutter
-  
+
   $ cookiecutter https://github.com/hypebeast/cookiecutter-flask-seed-minimal.git
 
 
@@ -60,8 +60,11 @@ Step 3: Create a repo
 Create a git repo and add your new project.
 
   $ cd cookiecutter-flask-seed-minimal
+
   $ git init
+
   $ git add .
+
   $ git commit
 
 
