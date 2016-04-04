@@ -15,6 +15,7 @@ Quick Start
 Generate a new project:
 
   $ pip install cookiecutter
+  
   $ cookiecutter https://github.com/hypebeast/cookiecutter-flask-seed-minimal.git
 
 
