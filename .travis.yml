@@ -9,6 +9,9 @@ python:
   - 3.4
   - 3.5
 
+before_script:
+  - npm install -g bower
+
 install:
   - pip install cookiecutter
   - pip install invoke==0.12.2
