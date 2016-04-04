@@ -9,9 +9,9 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Command, Manager, Option, Server, Shell
 from flask_script.commands import Clean, ShowUrls
 
-from myapp.app import create_app
-from myapp.database import db
-from myapp.settings import DevConfig, ProdConfig
+from {{ cookiecutter.app_name }}.app import create_app
+from {{ cookiecutter.app_name }}.database import db
+from {{ cookiecutter.app_name }}.settings import DevConfig, ProdConfig
 
 CONFIG = ProdConfig if os.environ.get('MYAPP_ENV') == 'prod' else DevConfig
 HERE = os.path.abspath(os.path.dirname(__file__))

@@ -1,18 +1,16 @@
-{% raw %}
-
 <footer>
   <small>
-  <ul class="company">
-    <li>© Sebastian Ruml</li>
-  </ul>
+    <ul class="company">
+      <li>© {{ cookiecutter.author }}</li>
+    </ul>
 
     <ul class="footer-nav">
 
+      {% raw %}
       <li><a href="{{ url_for('public.about') }}">About</a></li>
+      {% endraw %}
 
-      <li><a href="mailto:sebastian@sebastianruml.name">Contact</a></li>
+      <li><a href="mailto:{{ cookiecutter.email }}">Contact</a></li>
     </ul>
   </small>
 </footer>
-
-{% endraw %}

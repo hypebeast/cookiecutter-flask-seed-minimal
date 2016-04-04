@@ -1,5 +1,5 @@
 ===============================
-myapp
+{{ cookiecutter.app_name }}
 ===============================
 
 A flasky app.
@@ -8,11 +8,11 @@ A flasky app.
 Quickstart
 ----------
 
-First, set your app's secret key as an environment variable. For example, example add the following to ``.bashrc`` or ``.bash_profile``.
+First, set your app's secret key as an environment variable.
 
 .. code-block:: bash
 
-    export MYAPP_SECRET='something-really-secret'
+    export {{ cookiecutter.app_name | upper }}_SECRET='something-really-secret'
 
 
 Then run the following commands to bootstrap your environment.
@@ -20,15 +20,15 @@ Then run the following commands to bootstrap your environment.
 
 ::
 
-    git clone https://github.com/hypebeast/myapp
-    cd myapp
+    git clone https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.app_name }}
+    cd {{ cookiecutter.app_name }}
     pip install -r requirements/dev.txt
     bower install
     python manage.py server
 
 You will see a pretty welcome screen.
 
-Once you have installed your DBMS, run the following to create your app's database tables and perform the initial migration:
+If you want to use a database, install your desired DBMS and run the following to create your app's database tables and perform the initial migration:
 
 ::
 
@@ -42,7 +42,7 @@ Once you have installed your DBMS, run the following to create your app's databa
 Deployment
 ----------
 
-In your production environment, make sure the ``MYAPP_ENV`` environment variable is set to ``"prod"``.
+In your production environment, make sure the ``{{ cookiecutter.app_name | upper }}_ENV`` environment variable is set to ``"prod"``.
 
 
 Shell
@@ -52,7 +52,7 @@ To open the interactive shell, run ::
 
     python manage.py shell
 
-By default, you will have access to ``app``, ``db``, and the ``User`` model.
+By default, you will have access to ``app``, and the ``db`` model.
 
 
 Running Tests

@@ -1,6 +1,11 @@
 {% raw %}
-
 {% extends "layouts/base.html" %}
+
+{% block page_title %}
+{% endraw %}
+{{ cookiecutter.project_name }}
+{% raw %}
+{% endblock %}
 
 {% block content %}
 
@@ -8,13 +13,15 @@
   <div class="uk-width-1-1 uk-row-first">
     <div class="uk-block uk-block-large uk-block-primary uk-contrast uk-vertical-align uk-text-center">
       <div class="uk-width-1-2 uk-vertical-align-middle">
-        <h1>Welcome to myapp</h1>
+{% endraw %}
+        <h1>Welcome to {{ cookiecutter.app_name }}</h1>
         <p class="uk-text-large">
-          This is a starter Flask project. It includes uikit, jQuery 2, Flask-SQLAlchemy, WTForms, and various testing utilities out of the box.
+          This is a starter Flask project. It includes uikit, Flask-SQLAlchemy, WTForms, jQuery 2, and various testing utilities out of the box.
         </p>
         <p>
-          <a href="https://github.com/hypebeast/cookiecutter-flask-seed-minimal" class="uk-button uk-button-success">Learn more &raquo;</a>
+          <a href="https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.repo_name }}" class="uk-button uk-button-success">Learn more &raquo;</a>
         </p>
+{% raw %}
       </div>
     </div>
   </div>
@@ -87,7 +94,5 @@
 
 </div>
 
-
 {% endblock %}
-
 {% endraw %}

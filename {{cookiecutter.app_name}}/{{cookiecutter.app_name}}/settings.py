@@ -7,7 +7,7 @@ from logging import DEBUG, WARN
 class Config(object):
     """Base configuration."""
 
-    PROJECT = 'myapp'
+    PROJECT = '{{ cookiecutter.app_name }}'
     SECRET_KEY = os.environ.get('MYAPP_SECRET', 'secret-key')  # TODO: Change me
     APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
     PROJECT_ROOT = os.path.abspath(os.path.join(APP_DIR, os.pardir))

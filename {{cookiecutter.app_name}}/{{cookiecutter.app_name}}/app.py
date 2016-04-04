@@ -5,11 +5,11 @@ import sys
 
 from flask import Flask, render_template
 
-from myapp.assets import assets
-from myapp.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, migrate
-from myapp.public import public
-from myapp.settings import Config, ProdConfig
-from myapp.utils import pretty_date
+from {{ cookiecutter.app_name }}.assets import assets
+from {{ cookiecutter.app_name }}.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, migrate
+from {{ cookiecutter.app_name }}.public import public
+from {{ cookiecutter.app_name }}.settings import Config, ProdConfig
+from {{ cookiecutter.app_name }}.utils import pretty_date  # noqa
 
 DEFAULT_BLUEPRINTS = (
     public,
@@ -77,7 +77,7 @@ def configure_error_handlers(app):
 
 
 def configure_hook(app):
-    """Configure hooks."""
+    """Configure hook."""
     @app.before_request
     def before_request():
         pass
@@ -96,7 +96,7 @@ def configure_logging(app):
 
 def configure_template_filters(app):
     """Configure template filters."""
-    @app.template_filter()
+    @app.template_filter()  # noqa
     def pretty_date(value):
         return pretty_date(value)
 

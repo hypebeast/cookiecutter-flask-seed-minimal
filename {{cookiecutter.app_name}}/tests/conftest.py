@@ -4,8 +4,8 @@
 import pytest
 from webtest import TestApp
 
-from myapp.app import create_app
-from myapp.settings import TestConfig
+from {{ cookiecutter.app_name }}.app import create_app
+from {{ cookiecutter.app_name }}.settings import TestConfig
 
 
 @pytest.yield_fixture(scope='function')
