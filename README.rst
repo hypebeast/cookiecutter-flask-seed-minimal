@@ -1,6 +1,9 @@
 cookiecutter-flask-seed-minimal
 ===============================
 
+.. image:: https://travis-ci.org/hypebeast/cookiecutter-flask-seed-minimal.svg?branch=master
+    :target: https://travis-ci.org/hypebeast/cookiecutter-flask-seed-minimal
+
 A minimal and clean Cookiecutter template for Flask.
 
 It includes uikit, Flask-SQLAlchemy, WTForms, jQuery 2, and various testing utilities out of the box.
