@@ -7,7 +7,7 @@ from flask import Flask, render_template
 
 from {{ cookiecutter.app_name }}.assets import assets
 from {{ cookiecutter.app_name }}.extensions import bcrypt, cache, csrf_protect, db, debug_toolbar, migrate
-from {{ cookiecutter.app_name }}.public import public
+from {{ cookiecutter.app_name }}.public import blueprint as public
 from {{ cookiecutter.app_name }}.settings import Config, ProdConfig
 from {{ cookiecutter.app_name }}.utils import pretty_date  # noqa
 

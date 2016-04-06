@@ -4,9 +4,13 @@ cookiecutter-flask-seed-minimal
 .. image:: https://travis-ci.org/hypebeast/cookiecutter-flask-seed-minimal.svg?branch=master
     :target: https://travis-ci.org/hypebeast/cookiecutter-flask-seed-minimal
 
-A minimal and clean Cookiecutter template for Flask.
+A minimal and clean Cookiecutter template for Flask that utilizes best practices (blueprints and application Factory patterns).
 
-It includes uikit, Flask-SQLAlchemy, WTForms, jQuery 2, and various testing utilities out of the box.
+It includes uikit, Flask-SQLAlchemy, WTForms, and various testing utilities out of the box.
+
+It doesn't provide user management (e.g. login, registration, etc.) out of the box,
+because it's a minimal project template. But it provides support for DBMS and therefore
+you can easily add user management by yourself if you want.
 
 
 Quick Start
@@ -22,7 +26,21 @@ Generate a new project:
 Features
 --------
 
-TODO
+- Uses [uikit](http://getuikit.com) as frontend library
+- Flask-SQLAlchemy
+- Easy database migrations with Flask-Migrate
+- Flask-WTForms with login and registration forms
+- Procfile for deploying to a PaaS (e.g. Heroku)
+- pytest and Factory-Boy for testing (example tests included)
+- A simple manage.py script.
+- CSS and JS minification using Flask-Assets
+- Bower support for frontend package management
+- Caching using Flask-Cache
+- Useful debug toolbar
+- A Fabric file for easy provisioning and deployment (via distutils)
+- Deployment uses Gunicorn, Nginx and Supervisor
+- Alternative you can use Heroku for deployment
+- Utilizes best practices: Blueprints and Application Factory patterns
 
 
 Screenshot
