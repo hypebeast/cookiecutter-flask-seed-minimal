@@ -6,6 +6,7 @@ include README.rst
 # Including
 # Python source files, test/*.py will be automatically included.
 recursive-include {{ app_name }} *.py
+recursive-include tests *.py
 
 # Requirements
 recursive-include requirements *
