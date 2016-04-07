@@ -1,0 +1,32 @@
+# http://docs.python.org/distutils/sourcedist.html#manifest-template
+# http://docs.python.org/distutils/sourcedist.html#specifying-the-files-to-distribute
+include LICENSE
+include README.rst
+
+# Including
+# Python source files, test/*.py will be automatically included.
+recursive-include {{ app_name }} *.py
+
+# Requirements
+recursive-include requirements *
+include requirements.txt
+
+# Migrations
+recursive-include migrations *
+
+# Manager scripts
+include manage.py
+
+# Templates
+recursive-include {{ app_name }}/templates *
+
+# Static files
+recursive-include {{ app_name }}/static *
+
+# Bower
+include bower.json
+include .bowerrc
+
+# Excluding
+recursive-exclude {{ app_name }} *.pyc
+recursive-exclude tests *.pyc
