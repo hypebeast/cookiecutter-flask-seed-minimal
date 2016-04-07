@@ -10,18 +10,18 @@ except ImportError:
 README = open('README.rst').read()
 LICENSE = open("LICENSE").read()
 
-project = "{{ project_name }}"
+project = "{{ cookiecutter.project_name }}"
 
 setup(
     name=project,
-    version={{ app_name }}.__version__,
-    url='https://github.com/{{ github_username }}/{{ repo_name }}',
-    description='{{ project_short_description }}',
+    version={{cookiecutter.app_name}}.__version__,
+    url='https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.repo_name }}',
+    description='{{ cookiecutter.project_short_description }}',
     long_description=(README),
     license=(LICENSE),
-    author='{{ author }}',
-    author_email='{{ email }}',
-    packages=["{{ app_name }}"],
+    author='{{ cookiecutter.author }}',
+    author_email='{{ cookiecutter.email }}',
+    packages=["{{ cookiecutter.app_name }}"],
     include_package_data=True,
     zip_safe=False,
     install_requires=[

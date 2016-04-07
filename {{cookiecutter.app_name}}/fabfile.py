@@ -3,7 +3,7 @@
 """
 This is a simple Fabric script that handles the following tasks:
 
-1. Bootstrapping the server(s)
+1. Bootstrapping/Provisioning the server(s)
 2. Deploying the application
 
 For deployment the following technology stack is used:
@@ -20,7 +20,7 @@ During bootstrapping the following tasks are executed:
 
 The following assumptions are made:
 
-- It's assumed that Debian or Ubuntu is used as the server os
+- It's assumed that Debian or Ubuntu runs on the server
 
 Examples:
 
@@ -35,7 +35,7 @@ from fabric.api import abort, env, local, settings, task, sudo, cd, lcd, put, ru
 from fabric.colors import red, green
 from fabric.contrib.files import exists
 
-from {{ app_name }} import __version__
+from {{cookiecutter.app_name}} import __version__
 
 
 ########## CONFIG
@@ -44,14 +44,14 @@ env.user = 'xxxxx' # Change: user used for deployment
 env.hosts = ['xxxxx', 'xxxxx'] # Change: hosts to deploy to
 env.activate = "source %s/%s" % (remote_app_dir, "env/bin/activate")
 
-app_name = '{{ app_name }}'
+app_name = '{{cookiecutter.app_name}}'
 
 local_app_dir = '.'
 local_config_dir = './config'
 
 remote_app_home_dir = '/opt'
-remote_app_dir = os.path.join(remote_app_home_dir, '{{ app_name }}')
-remote_log_dir = os.path.join('/var/log', '{{ app_name }}')
+remote_app_dir = os.path.join(remote_app_home_dir, '{{cookiecutter.app_name}}')
+remote_log_dir = os.path.join('/var/log', '{{cookiecutter.app_name}}')
 remote_tmp_dir = '/tmp'
 
 dist_package_name = "{}-{}.tar.gz".format(app_name, __version__)
@@ -175,7 +175,17 @@ def status():
 
 def restart_app():
     """Restart the app."""
-    sudo('supervisorctl restart myapp')
+    sudo('supervisorctl restart {{cookiecutter.app_name}}')
+
+
+def start_app():
+    """Restart the app."""
+    sudo('supervisorctl start {{cookiecutter.app_name}}')
+
+
+def restart_app():
+    """Restart the app."""
+    sudo('supervisorctl restart {{cookiecutter.app_name}}')
 
 ########## END MANAGEMENT
 
@@ -183,7 +193,8 @@ def restart_app():
 ########## BOOTSTRAPING
 
 def bootstrap():
-    info('Setup server')
+    """Provisioning the server."""
+    info('Provisioning server')
 
     # Install all packages
     install_packages()
@@ -194,7 +205,7 @@ def bootstrap():
     # Configure Nginx
     configure_nginx()
 
-    info('DONE - Setup server')
+    info('DONE - Provisioning server')
 
 
 ########## END BOOTSTRAPING
@@ -203,7 +214,10 @@ def bootstrap():
 ########## DEPLOYMENT
 
 def deploy():
-    """
+    """Deploy the application.
+
+    Tasks:
+
     1. Copy dist package to remote host
     2. Install dist package
     3. Install requirements

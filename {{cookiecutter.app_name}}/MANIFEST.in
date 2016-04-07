@@ -5,7 +5,7 @@ include README.rst
 
 # Including
 # Python source files, test/*.py will be automatically included.
-recursive-include {{ app_name }} *.py
+recursive-include {{ cookiecutter.app_name }} *.py
 recursive-include tests *.py
 
 # Requirements
@@ -19,15 +19,15 @@ recursive-include migrations *
 include manage.py
 
 # Templates
-recursive-include {{ app_name }}/templates *
+recursive-include {{ cookiecutter.app_name }}/templates *
 
 # Static files
-recursive-include {{ app_name }}/static *
+recursive-include {{ cookiecutter.app_name }}/static *
 
 # Bower
 include bower.json
 include .bowerrc
 
 # Excluding
-recursive-exclude {{ app_name }} *.pyc
+recursive-exclude {{ cookiecutter.app_name }} *.pyc
 recursive-exclude tests *.pyc
