@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
+"""Simple Fabric script for provisioning and deployment.
+
 This is a simple Fabric script that handles the following tasks:
 
 1. Bootstrapping/Provisioning the server(s)
@@ -22,45 +23,37 @@ The following assumptions are made:
 
 - It's assumed that Debian or Ubuntu runs on the server
 
-Examples:
-
-- https://github.com/disassembler/fabric-example/blob/master/fabfile.py
-- https://gist.github.com/starenka/1225493
-- http://prakhar.me/articles/flask-on-nginx-and-gunicorn/
 """
-import os
-
-from fabric.contrib.console import confirm
-from fabric.api import abort, env, local, settings, task, sudo, cd, lcd, put, run, prefix, get
-from fabric.colors import red, green
+from fabric.api import env, local, settings, sudo, cd, lcd, put, run, prefix
+from fabric.colors import green
 from fabric.contrib.files import exists
 
-from {{cookiecutter.app_name}} import __version__
+from {{ cookiecutter.app_name }} import __version__
 
 
-########## CONFIG
+# CONFIG
 
-env.user = 'xxxxx' # Change: user used for deployment
-env.hosts = ['xxxxx', 'xxxxx'] # Change: hosts to deploy to
-env.activate = "source %s/%s" % (remote_app_dir, "env/bin/activate")
-
-app_name = '{{cookiecutter.app_name}}'
+app_name = '{{ cookiecutter.app_name }}'
 
 local_app_dir = '.'
-local_config_dir = './config'
+local_config_dir = './deploy'
 
 remote_app_home_dir = '/opt'
-remote_app_dir = os.path.join(remote_app_home_dir, '{{cookiecutter.app_name}}')
-remote_log_dir = os.path.join('/var/log', '{{cookiecutter.app_name}}')
+remote_app_dir = '{}/{}'.format(remote_app_home_dir, '{{cookiecutter.app_name}}')
+remote_log_dir = '{}/{}'.format('/var/log', '{{cookiecutter.app_name}}')
 remote_tmp_dir = '/tmp'
 
-dist_package_name = "{}-{}.tar.gz".format(app_name, __version__)
-dist_package_file = "{}/{}".format(remote_tmp_dir, dist_package_name)
+dist_package_name = '{}-{}.tar.gz'.format(app_name, __version__)
+dist_package_file = '{}/{}'.format(remote_tmp_dir, dist_package_name)
 
-########## END CONFIG
+env.user = 'xxxxx'  # Change: user used for deployment
+env.hosts = ['xxxxx', 'xxxxx']  # Change: hosts to deploy to
+env.activate = 'source {}/{}'.format(remote_app_dir, 'env/bin/activate')
+
+# END CONFIG
 
 
-########## HELPERS
+# HELPERS
 
 def info(message):
     """Print info message."""
@@ -68,21 +61,20 @@ def info(message):
 
 
 def package_installed(pkg_name):
-    """ref: http:superuser.com/questions/427318/#comment490784_427339"""
-    cmd_f = 'dpkg-query -l "%s" | grep -q ^.i'
-    cmd = cmd_f % (pkg_name)
+    """Check if a package is already installed."""
+    cmd = 'dpkg-query -l \"{}\" | grep -q ^.i'.format(pkg_name)
     with settings(warn_only=True):
         result = sudo(cmd)
     return result.succeeded
 
 
 def yes_install(pkg_name):
-    """ref: http://stackoverflow.com/a/10439058/1093087"""
+    """ref: http://stackoverflow.com/a/10439058/1093087."""
     sudo('apt-get --force-yes --yes install %s' % (pkg_name))
 
-########## END HELPERS
+# END HELPERS
 
-########## BOOTSTRAPING HELPERS
+# BOOTSTRAPING HELPERS
 
 PACKAGES = (
     'python',
@@ -91,11 +83,14 @@ PACKAGES = (
     'python-virtualenv',
     'nginx',
     'supervisor',
+    'python-setuptools',
+    'python-psycopg2',
+    'git-core',
 )
 
 
 def install_packages():
-    """ Install required packages. """
+    """Install required packages."""
     sudo('apt-get update')
     for package in PACKAGES:
         if not package_installed(package):
@@ -103,8 +98,7 @@ def install_packages():
 
 
 def create_app_dir():
-    """ Create the application directory and setup a virtualenv.
-    """
+    """Create the application directory and setup a virtualenv."""
     # create app dir
     if exists(remote_app_dir) is False:
         sudo('mkdir -p ' + remote_app_dir)
@@ -115,17 +109,47 @@ def create_app_dir():
             sudo('virtualenv env')
 
     # Change permissions
-    sudo('chown pi:pi ' + remote_app_dir + ' -R')
+    sudo('chown {}:{} {} -R'.format(env.user, env.user, remote_app_dir))
 
     # Create log dir
     if exists(remote_log_dir) is False:
-        sudo('mkdir %s' % (remote_log_dir))
+        sudo('mkdir {}'.format(remote_log_dir))
 
 
-########## END BOOTSTRAPING HELPERS
+def configure_supervisor():
+    """Configure supervisor.
+
+    Installs supervisor configuration for the application and register it.
+    """
+    with lcd(local_config_dir):
+        with cd('/etc/supervisor/conf.d'):
+            put('./supervisor.conf', './{{ cookiecutter.app_name }}.conf', use_sudo=True)
+            sudo('supervisorctl reread')
+            sudo('supervisorctl update')
 
 
-########## DEPLOYMENT HELPERS
+def configure_nginx():
+    """Configure nginx.
+
+    Installs nginx config for the application.
+    """
+    # copy configuration
+    with lcd(local_config_dir):
+        with cd('/etc/nginx/sites-available'):
+            put('./nginx.conf', './{}.conf'.format(app_name), use_sudo=True)
+
+    # enable configuration
+    if exists('/etc/nginx/sites-enabled/{}.conf'.format(app_name)) is False:
+        sudo('ln -s /etc/nginx/sites-available/{}.conf'.format(app_name) +
+             ' /etc/nginx/sites-enabled/{}.conf'.format(app_name))
+
+    # reload configuration
+    sudo('service nginx reload')
+
+# END BOOTSTRAPING HELPERS
+
+
+# DEPLOYMENT HELPERS
 
 def pack():
     """Create a new source distribution as tarball."""
@@ -136,37 +160,40 @@ def copy_dist_package():
     """Copy the dist package to the remote host(s)."""
     put('./dist/%s' % (dist_package_name), remote_tmp_dir)
 
+    with cd(remote_app_dir):
+        put('./deploy/gunicorn_start.sh', './gunicorn_start.sh')
+
 
 def install_dist_package():
     """Install the dist package on the remote host(s)."""
     with cd(remote_app_dir):
         with prefix(env.activate):
-            sudo('pip install %s' % (dist_package_file))
+            sudo('pip install {}'.format(dist_package_file))
 
     # remove dist package
-    run('rm %s' % (dist_package_file))
+    run('rm {}'.format(dist_package_file))
 
 
-def copy_migrations():
-    """Copy migration scripts to remote host"""
-    local('tar czf migrations.tar.gz migrations', capture=False)
-    put('migrations.tar.gz', remote_app_dir, use_sudo=True)
-
-    with cd(remote_app_dir):
-        sudo('rm -rf migrations')
-        sudo('tar xzf migrations.tar.gz')
-        sudo('rm migrations.tar.gz')
-
-    local('rm migrations.tar.gz')
-
-
-def change_permissions():
-    sudo('chown {}:{} {} -R'.format(run_user, run_user, remote_app_dir))
-
-########## END DEPLOYMENT HELPERS
+# def copy_migrations():
+#     '''Copy migration scripts to remote host'''
+#     local('tar czf migrations.tar.gz migrations', capture=False)
+#     put('migrations.tar.gz', remote_app_dir, use_sudo=True)
+#
+#     with cd(remote_app_dir):
+#         sudo('rm -rf migrations')
+#         sudo('tar xzf migrations.tar.gz')
+#         sudo('rm migrations.tar.gz')
+#
+#     local('rm migrations.tar.gz')
 
 
-########## Supervisor
+# def change_permissions():
+#     sudo('chown {}:{} {} -R'.format(run_user, run_user, remote_app_dir))
+
+# END DEPLOYMENT HELPERS
+
+
+# Supervisor
 
 def status():
     """Return the status of the app."""
@@ -182,15 +209,10 @@ def start_app():
     """Restart the app."""
     sudo('supervisorctl start {{cookiecutter.app_name}}')
 
-
-def restart_app():
-    """Restart the app."""
-    sudo('supervisorctl restart {{cookiecutter.app_name}}')
-
-########## END MANAGEMENT
+# END MANAGEMENT
 
 
-########## BOOTSTRAPING
+# BOOTSTRAPING
 
 def bootstrap():
     """Provisioning the server."""
@@ -208,10 +230,10 @@ def bootstrap():
     info('DONE - Provisioning server')
 
 
-########## END BOOTSTRAPING
+# END BOOTSTRAPING
 
 
-########## DEPLOYMENT
+# DEPLOYMENT
 
 def deploy():
     """Deploy the application.
@@ -223,24 +245,27 @@ def deploy():
     3. Install requirements
     4. Run migrations
     """
-    info("DEPLOYING APPLICATION")
+    info('Start deploying application')
 
-    info("Copy dist package to the remote host")
+    info('Copy dist package to the remote host')
     copy_dist_package()
 
-    info("Install application")
+    info('Install application')
     install_dist_package()
 
-    # info("Install requirements")
+    info('Restarting application')
+    restart_app()
+
+    # info('Install requirements')
     # install_requirements()
 
-    change_permissions()
+    # change_permissions()
 
-    info("Run migrations")
-    copy_migrations()
-    make_migrations()
+    # info('Run migrations')
+    # copy_migrations()
+    # make_migrations()
 
-    info("DONE DEPLOYING APPLICATION")
+    info('DONE - deploying application')
 
 
-########## END DEPLOYMENT
+# END DEPLOYMENT

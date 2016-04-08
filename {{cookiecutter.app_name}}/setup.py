@@ -1,16 +1,15 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-import os, sys, subprocess
-import myapp
+"""Setup script."""
+import {{ cookiecutter.app_name }}
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
 README = open('README.rst').read()
-LICENSE = open("LICENSE").read()
+LICENSE = open('LICENSE').read()
 
-project = "{{ cookiecutter.project_name }}"
+project = '{{ cookiecutter.project_name }}'
 
 setup(
     name=project,
@@ -21,7 +20,7 @@ setup(
     license=(LICENSE),
     author='{{ cookiecutter.author }}',
     author_email='{{ cookiecutter.email }}',
-    packages=["{{ cookiecutter.app_name }}"],
+    packages=['{{ cookiecutter.app_name }}'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
