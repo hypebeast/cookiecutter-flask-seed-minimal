@@ -26,11 +26,10 @@ Generate a new project:
 Features
 --------
 
-- Uses [uikit](http://getuikit.com) as frontend library
+- Uses uikit_ as frontend library
 - Flask-SQLAlchemy
 - Easy database migrations with Flask-Migrate
 - Flask-WTForms with login and registration forms
-- Procfile for deploying to a PaaS (e.g. Heroku)
 - pytest and Factory-Boy for testing (example tests included)
 - A simple manage.py script.
 - CSS and JS minification using Flask-Assets
@@ -38,10 +37,12 @@ Features
 - Caching using Flask-Cache
 - Useful debug toolbar
 - A Fabric file for easy provisioning and deployment (via distutils)
-- Deployment uses Gunicorn, Nginx and Supervisor
+- Procfile for deploying to a PaaS (e.g. Heroku)
+- Production stack uses Gunicorn, Nginx and Supervisor
 - Alternative you can use Heroku for deployment
 - Utilizes best practices: Blueprints and Application Factory patterns
 
+.. _uikit: http://getuikit.com
 
 Screenshot
 ----------
@@ -70,7 +71,14 @@ You'll be prompted for some questions, answer them, then it will create a new Fl
 
 Example project generation:
 
-  TODO
+  $ cookiecutter https://github.com/hypebeast/cookiecutter-flask-seed-minimal.git
+  author (default is "Sebastian Ruml")?
+  email (default is "sebastian@sebastianruml.name")?
+  github_username (default is "hypebeast")?
+  project_name (default is "My Flask App")?
+  app_name (default is "myflaskapp")?
+  repo_name (default is "myflaskapp")?
+  project_short_description (default is "A minimal flasky app.")?
 
 Step 3: Create a repo
 +++++++++++++++++++++
@@ -101,7 +109,9 @@ repo_name
 License
 -------
 
-TODO
+See License_.
+
+.. _License: /LICENSE.
 
 
 Credits
@@ -112,7 +122,11 @@ This project was inspired by the following projects:
 * cookiecutter-flask: https://github.com/sloria/cookiecutter-flask
 
 
-Changelog
----------
+TODOs
+-----
 
-TODO
+* Fabric: Proper handling of migrations
+* Fabric: Deployment to Heroku
+* Ansible integration
+* Add footer
+* Flask-AppConfig integration

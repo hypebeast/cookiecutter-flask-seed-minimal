@@ -42,7 +42,20 @@ If you want to use a database, install your desired DBMS and run the following t
 Deployment
 ----------
 
+Server
+++++++
+
 In your production environment, make sure the ``{{ cookiecutter.app_name | upper }}_ENV`` environment variable is set to ``"prod"``.
+
+There is a fabfile that helps you to setup and deploy your application. The fabfile contains two main tasks:
+
+  * **setup**: Setup the server and install all required dependencies.
+  * **deploy**: Deploy the application via distutils
+
+Heroku
+++++++
+
+TODO
 
 
 Shell

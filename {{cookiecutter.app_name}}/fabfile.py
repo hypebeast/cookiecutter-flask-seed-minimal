@@ -46,7 +46,7 @@ remote_tmp_dir = '/tmp'
 dist_package_name = '{}-{}.tar.gz'.format(app_name, __version__)
 dist_package_file = '{}/{}'.format(remote_tmp_dir, dist_package_name)
 
-env.user = 'xxxxx'  # Change: user used for deployment
+env.user = 'xxxxx'  # Change: user for deployment
 env.hosts = ['xxxxx', 'xxxxx']  # Change: hosts to deploy to
 env.activate = 'source {}/{}'.format(remote_app_dir, 'env/bin/activate')
 
@@ -173,23 +173,6 @@ def install_dist_package():
     # remove dist package
     run('rm {}'.format(dist_package_file))
 
-
-# def copy_migrations():
-#     '''Copy migration scripts to remote host'''
-#     local('tar czf migrations.tar.gz migrations', capture=False)
-#     put('migrations.tar.gz', remote_app_dir, use_sudo=True)
-#
-#     with cd(remote_app_dir):
-#         sudo('rm -rf migrations')
-#         sudo('tar xzf migrations.tar.gz')
-#         sudo('rm migrations.tar.gz')
-#
-#     local('rm migrations.tar.gz')
-
-
-# def change_permissions():
-#     sudo('chown {}:{} {} -R'.format(run_user, run_user, remote_app_dir))
-
 # END DEPLOYMENT HELPERS
 
 
@@ -243,7 +226,6 @@ def deploy():
     1. Copy dist package to remote host
     2. Install dist package
     3. Install requirements
-    4. Run migrations
     """
     info('Start deploying application')
 
@@ -256,16 +238,6 @@ def deploy():
     info('Restarting application')
     restart_app()
 
-    # info('Install requirements')
-    # install_requirements()
-
-    # change_permissions()
-
-    # info('Run migrations')
-    # copy_migrations()
-    # make_migrations()
-
     info('DONE - deploying application')
-
 
 # END DEPLOYMENT
