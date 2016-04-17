@@ -1,15 +1,21 @@
 {% raw %}
 
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
 
 {% block page_title %}Server error{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-    <div class="text-center">
-        <h1>500</h1>
-        <p>Sorry, something went wrong on our system. Don't panic, we are fixing it! Please try again later.</p>
+<div class="uk-block uk-block-muted">
+  <div class="uk-container">
+    <h3>500</h3>
+    <div class="uk-grid uk-grid-match" data-uk-grid-margin="">
+      <div class="uk-width-medium-1-1 uk-row-first">
+        <div class="uk-panel">
+          <p>Sorry, something went wrong on our system. Don't panic, we are fixing it! Please try again later.</p>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
 
